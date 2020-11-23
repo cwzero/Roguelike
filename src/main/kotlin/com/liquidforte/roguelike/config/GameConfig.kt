@@ -1,9 +1,10 @@
-package com.liquidforte.roguelike
+package com.liquidforte.roguelike.config
 
 import org.hexworks.zircon.api.CP437TilesetResources
 import org.hexworks.zircon.api.ColorThemes
 import org.hexworks.zircon.api.application.AppConfig
 import org.hexworks.zircon.api.data.Size
+import org.hexworks.zircon.api.data.Size3D
 
 object GameConfig {
     val TILESET = CP437TilesetResources.rexPaint16x16()
@@ -21,6 +22,11 @@ object GameConfig {
 
     const val STATUS_AREA_HEIGHT = WINDOW_HEIGHT - PLAY_AREA_HEIGHT
     const val INFO_AREA_WIDTH = WINDOW_WIDTH - PLAY_AREA_WIDTH
+
+    const val DUNGEON_LEVELS = 3
+
+    val WORLD_SIZE = Size3D.create(WINDOW_WIDTH * 2, WINDOW_HEIGHT * 2, DUNGEON_LEVELS)
+    val VISIBLE_SIZE = Size3D.create(PLAY_AREA_WIDTH, PLAY_AREA_HEIGHT, 1)
 
     fun buildAppConfig() = AppConfig.newBuilder()
             .withDefaultTileset(TILESET)

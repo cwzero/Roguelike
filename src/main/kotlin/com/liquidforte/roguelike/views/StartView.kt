@@ -1,6 +1,7 @@
 package com.liquidforte.roguelike.views
 
-import com.liquidforte.roguelike.GameConfig.THEME
+import com.liquidforte.roguelike.config.GameConfig.THEME
+import com.liquidforte.roguelike.config.GameConfig.TITLE
 import org.hexworks.zircon.api.ComponentDecorations
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.component.ComponentAlignment
@@ -12,7 +13,7 @@ import org.hexworks.zircon.api.view.base.BaseView
 class StartView(private val grid: TileGrid)
     : BaseView(grid, THEME) {
     override fun onDock() {
-        val msg = "Welcome to Liquid Forte Roguelike"
+        val msg = "Welcome to $TITLE"
         val header = Components.textBox(msg.length)
                 .addHeader(msg)
                 .addNewLine()

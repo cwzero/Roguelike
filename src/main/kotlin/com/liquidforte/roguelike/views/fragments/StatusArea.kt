@@ -1,7 +1,7 @@
 package com.liquidforte.roguelike.views.fragments
 
-import com.liquidforte.roguelike.GameConfig.PLAY_AREA_WIDTH
-import com.liquidforte.roguelike.GameConfig.STATUS_AREA_HEIGHT
+import com.liquidforte.roguelike.config.GameConfig.PLAY_AREA_WIDTH
+import com.liquidforte.roguelike.config.GameConfig.STATUS_AREA_HEIGHT
 import org.hexworks.zircon.api.ComponentDecorations
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.builder.component.PanelBuilder
@@ -16,7 +16,4 @@ class StatusArea(screen: Screen, builder: PanelBuilder.() -> PanelBuilder = { th
             .withDecorations(ComponentDecorations.box())
             .build()
 
-    init {
-
-    }
 }

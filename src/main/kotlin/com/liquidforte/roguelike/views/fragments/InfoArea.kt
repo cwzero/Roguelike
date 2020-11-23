@@ -1,7 +1,7 @@
 package com.liquidforte.roguelike.views.fragments
 
-import com.liquidforte.roguelike.GameConfig.INFO_AREA_WIDTH
-import com.liquidforte.roguelike.GameConfig.WINDOW_HEIGHT
+import com.liquidforte.roguelike.config.GameConfig.INFO_AREA_WIDTH
+import com.liquidforte.roguelike.config.GameConfig.WINDOW_HEIGHT
 import org.hexworks.zircon.api.ComponentDecorations
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.builder.component.PanelBuilder
@@ -16,7 +16,4 @@ class InfoArea(screen: Screen, builder: PanelBuilder.() -> PanelBuilder = { this
             .withDecorations(ComponentDecorations.box())
             .build()
 
-    init {
-
-    }
 }
