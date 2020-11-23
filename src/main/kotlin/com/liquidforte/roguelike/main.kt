@@ -1,5 +1,9 @@
 package com.liquidforte.roguelike
 
-fun main() {
+import com.liquidforte.roguelike.views.StartView
+import org.hexworks.zircon.api.SwingApplications
 
+fun main() {
+    val grid = SwingApplications.startTileGrid(GameConfig.buildAppConfig())
+    grid.dock(StartView(grid))
 }
