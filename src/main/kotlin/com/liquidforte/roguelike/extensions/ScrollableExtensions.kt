@@ -1,6 +1,7 @@
 package com.liquidforte.roguelike.extensions
 
 import com.liquidforte.roguelike.Bounds3D
+import com.liquidforte.roguelike.Vector3D
 import org.hexworks.zircon.api.behavior.Scrollable3D
 import org.hexworks.zircon.api.data.Position
 import org.hexworks.zircon.api.data.Position3D
@@ -24,6 +25,6 @@ val Scrollable3D.bounds: Bounds3D
         return Bounds3D(actualSize, centerPoint)
     }
 
-fun Scrollable3D.forAllPositions(fn: (Position3D) -> Unit) {
-    bounds.fetchPositions().forEach(fn)
-}
+fun Scrollable3D.forAllPositions(fn: (Position3D) -> Unit) = actualSize.fetchPositions().forEach(fn)
+
+fun Scrollable3D.forAllVectors(fn: (Vector3D) -> Unit) = bounds.forAllVectors(fn)

@@ -86,7 +86,7 @@ class WorldBuilder(private val worldSize: Size3D = WORLD_SIZE) {
     }
 
     private fun forAllPositions(fn: (Position3D) -> Unit) {
-        Bounds3D(worldSize).forAllPositions(fn)
+        worldSize.fetchPositions().forEach(fn)
     }
 
     private fun GameBlock?.isEmptyFloor(): Boolean {

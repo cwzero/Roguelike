@@ -1,5 +1,6 @@
 package com.liquidforte.roguelike.world
 
+import com.liquidforte.roguelike.Vector3D
 import com.liquidforte.roguelike.blocks.GameBlock
 import com.liquidforte.roguelike.blocks.GameBlocks
 import com.liquidforte.roguelike.entities.attributes.Vision
@@ -81,8 +82,10 @@ class World(startingBlocks: Map<Position3D, GameBlock>,
                 && abs(x - other.x) + abs(y - other.y) <= radius
     }
 
+    fun addEntity(entity: AnyGameEntity, vec: Vector3D) : AnyGameEntity = addEntity(entity, bounds.getPosition(vec))
+
     fun addEntity(entity: AnyGameEntity, position: Position3D) : AnyGameEntity {
-        entity.position = bounds.relative(position)
+        entity.position = position
         engine.addEntity(entity)
 
         if (!hasBlockAt(position)) {

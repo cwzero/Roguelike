@@ -1,5 +1,6 @@
 package com.liquidforte.roguelike.world
 
+import com.liquidforte.roguelike.Vector3D
 import com.liquidforte.roguelike.blocks.GameBlock
 import com.liquidforte.roguelike.extensions.bounds
 import org.hexworks.cobalt.datatypes.Maybe
@@ -14,15 +15,11 @@ open class GameAreaBase(visibleSize: Size3D, actualSize: Size3D)
         .withVisibleSize(visibleSize)
         .withActualSize(actualSize)
         .build() {
-    override fun setBlockAt(position: Position3D, block: GameBlock) {
-        if (bounds.contains(position))
-            setBlockAt(bounds.relative(position), block)
+    fun setBlockAt(vec: Vector3D, block: GameBlock) {
+        setBlockAt(bounds.getPosition(vec), block)
     }
 
-    override fun fetchBlockAt(position: Position3D): Maybe<GameBlock> {
-        if (bounds.contains(position))
-            return fetchBlockAt(bounds.relative(position))
-        else
-            throw RuntimeException("access block outside bounds")
+    fun fetchBlockAt(vec: Vector3D): Maybe<GameBlock> {
+        return fetchBlockAt(bounds.getPosition(vec))
     }
 }
