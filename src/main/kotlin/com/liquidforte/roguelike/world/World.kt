@@ -10,9 +10,7 @@ import org.hexworks.amethyst.api.Engine
 import org.hexworks.amethyst.api.Engines
 import org.hexworks.amethyst.api.entity.EntityType
 import org.hexworks.cobalt.datatypes.Maybe
-import org.hexworks.zircon.api.builder.game.GameAreaBuilder
 import org.hexworks.zircon.api.data.*
-import org.hexworks.zircon.api.game.GameArea
 import org.hexworks.zircon.api.screen.Screen
 import org.hexworks.zircon.api.shape.EllipseFactory
 import org.hexworks.zircon.api.shape.LineFactory
@@ -23,10 +21,7 @@ import kotlin.random.Random
 class World(startingBlocks: Map<Position3D, GameBlock>,
         visibleSize: Size3D,
         actualSize: Size3D)
-    : GameArea<Tile, GameBlock> by GameAreaBuilder.newBuilder<Tile, GameBlock>()
-        .withVisibleSize(visibleSize)
-        .withActualSize(actualSize)
-        .build() {
+    : GameAreaBase(visibleSize, actualSize) {
     private val engine: Engine<GameContext> = Engines.newEngine()
 
     init {
@@ -37,22 +32,9 @@ class World(startingBlocks: Map<Position3D, GameBlock>,
                 entity.position = pos
             }
         }
+        scrollUpBy(actualSize.zLength)
+        center()
     }
-
-    val centerPoint: Position
-        get() {
-            return Position.create(actualSize.xLength / 2, actualSize.yLength / 2)
-        }
-
-    fun center() {
-        val offset: Position = actualSize.run {
-            Position.create(xLength / 2, yLength / 2)
-        }.minus(visibleOffset.to2DPosition())
-
-        scrollRightBy(offset.x)
-        scrollForwardBy(offset.y)
-    }
-
 
     fun findVisiblePositionsFor(entity: GameEntity<EntityType>): Iterable<Position> {
         val centerPos = entity.position.to2DPosition()
@@ -100,7 +82,7 @@ class World(startingBlocks: Map<Position3D, GameBlock>,
     }
 
     fun addEntity(entity: AnyGameEntity, position: Position3D) : AnyGameEntity {
-        entity.position = position
+        entity.position = bounds.relative(position)
         engine.addEntity(entity)
 
         if (!hasBlockAt(position)) {

@@ -1,10 +1,12 @@
 package com.liquidforte.roguelike.builders
 
+import com.liquidforte.roguelike.Bounds3D
 import com.liquidforte.roguelike.blocks.GameBlock
 import com.liquidforte.roguelike.blocks.GameBlocks
 import com.liquidforte.roguelike.config.GameConfig.WORLD_SIZE
 import com.liquidforte.roguelike.extensions.below
 import com.liquidforte.roguelike.extensions.sameLevelNeighborsShuffled
+import com.liquidforte.roguelike.extensions.forAllPositions
 import com.liquidforte.roguelike.world.World
 import org.hexworks.zircon.api.data.Position3D
 import org.hexworks.zircon.api.data.Size3D
@@ -21,7 +23,6 @@ class WorldBuilder(private val worldSize: Size3D = WORLD_SIZE) {
                 .smooth(8)
                 .connectLevels()
     }
-
 
     fun build(visibleSize: Size3D): World = World(blocks, visibleSize, worldSize)
 
@@ -66,7 +67,6 @@ class WorldBuilder(private val worldSize: Size3D = WORLD_SIZE) {
                 }
         blocks[posToConnect] = GameBlocks.stairsDown()
         blocks[posToConnect.below()] = GameBlocks.stairsUp()
-
     }
 
     private fun generateRandomFloorPositionsOn(level: Int) = sequence {
@@ -85,13 +85,12 @@ class WorldBuilder(private val worldSize: Size3D = WORLD_SIZE) {
         }
     }
 
-    private fun GameBlock?.isEmptyFloor(): Boolean {
-        return this?.isEmptyFloor ?: false
+    private fun forAllPositions(fn: (Position3D) -> Unit) {
+        Bounds3D(worldSize).forAllPositions(fn)
     }
 
-
-    private fun forAllPositions(fn: (Position3D) -> Unit) {
-        worldSize.fetchPositions().forEach(fn)
+    private fun GameBlock?.isEmptyFloor(): Boolean {
+        return this?.isEmptyFloor ?: false
     }
 
     private fun MutableMap<Position3D, GameBlock>.whenPresent(pos: Position3D, fn: (GameBlock) -> Unit) {
