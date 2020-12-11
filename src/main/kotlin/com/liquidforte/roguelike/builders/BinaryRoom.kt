@@ -26,14 +26,18 @@ class BinaryRoom(left: Int, right: Int, top: Int, bottom: Int) : Room(left, righ
         }
 
     fun connect(level: Level, connectFn: BinaryRoom.(Level) -> Unit) {
-        if (split) {
-            leftRoom!!.connect(level, connectFn)
-            rightRoom!!.connect(level, connectFn)
+        traverseUp {
             connectFn(level)
-            super.connect()
-        } else {
-            super.connect()
+            connect()
         }
+    }
+
+    fun traverseUp(fn: BinaryRoom.() -> Unit) {
+        if (split) {
+            leftRoom!!.traverseUp(fn)
+            rightRoom!!.traverseUp(fn)
+        }
+        this.fn()
     }
 
     fun traverse(fn: BinaryRoom.() -> Unit) {
