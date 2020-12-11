@@ -14,8 +14,7 @@ import org.hexworks.zircon.api.screen.Screen
 
 class PlayArea(world: World, screen: Screen, builder: PanelBuilder.() -> PanelBuilder = { this }) : Fragment {
     override val root = builder(Components.panel())
-            .withComponentRenderer(GameComponents.newGameAreaComponentRenderer(world, ProjectionMode.TOP_DOWN.toProperty(), GameTiles.FLOOR))
+            .withComponentRenderer(GameComponents.newGameAreaComponentRenderer(world, ProjectionMode.TOP_DOWN.toProperty(), GameTiles.UNREVEALED))
             .withSize(PLAY_AREA_WIDTH, PLAY_AREA_HEIGHT)
             .build()
-
 }

@@ -1,18 +1,20 @@
 package com.liquidforte.roguelike.blocks
 
 import com.liquidforte.roguelike.config.GameTiles
-import com.liquidforte.roguelike.extensions.GameEntity
-import com.liquidforte.roguelike.extensions.occupiesBlock
-import com.liquidforte.roguelike.extensions.tile
+import com.liquidforte.roguelike.entities.attributes.types.ClosedDoor
+import com.liquidforte.roguelike.entities.attributes.types.HiddenDoor
+import com.liquidforte.roguelike.entities.attributes.types.OpenDoor
+import com.liquidforte.roguelike.extensions.*
 import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.persistentHashMapOf
 import kotlinx.collections.immutable.toPersistentHashMap
 import org.hexworks.amethyst.api.entity.EntityType
 import org.hexworks.zircon.api.data.BlockTileType
+import org.hexworks.zircon.api.data.CharacterTile
 import org.hexworks.zircon.api.data.Tile
 import org.hexworks.zircon.api.data.base.BaseBlock
 
-class GameBlock(private val currentEntities: MutableList<GameEntity<EntityType>> = mutableListOf())
+class GameBlock(private val currentEntities: MutableList<AnyGameEntity> = mutableListOf(), private val defaultTile: CharacterTile = GameTiles.FLOOR)
     : BaseBlock<Tile>(emptyTile = GameTiles.UNREVEALED, tiles = persistentHashMapOf()) {override var tiles: PersistentMap<BlockTileType, Tile>
     get() = if (render) {
         mutableMapOf<BlockTileType, Tile>().run {
@@ -34,16 +36,20 @@ class GameBlock(private val currentEntities: MutableList<GameEntity<EntityType>>
                 memory = GameTiles.EMPTY
             }
 
+            put(BlockTileType.BOTTOM, defaultTile)
+
             this.toPersistentHashMap()
         }
     } else {
-        persistentHashMapOf(BlockTileType.TOP to memory)
+        persistentHashMapOf(BlockTileType.TOP to memory, BlockTileType.BOTTOM to defaultTile)
     }
     set(_) = Unit
 
-    var render: Boolean = false
+    var render: Boolean = true
 
     private var memory: Tile = GameTiles.UNREVEALED
+
+    var dirty: Boolean = false
 
     val isEmptyFloor: Boolean
         get() = currentEntities.isEmpty()
@@ -56,6 +62,27 @@ class GameBlock(private val currentEntities: MutableList<GameEntity<EntityType>>
 
     val entities: Iterable<GameEntity<EntityType>>
         get() = currentEntities.toList()
+
+    val door: AnyGameEntity?
+        get() = currentEntities.first { it.isDoor }
+
+    val isDoor: Boolean
+        get() = currentEntities.any { it.isDoor }
+
+    val isWall: Boolean
+        get() = currentEntities.any { it.isWall }
+
+    val isRoughFloor: Boolean
+        get() = !isWall && defaultTile == GameTiles.ROUGH_FLOOR
+
+    val isRoughWall: Boolean
+        get() = currentEntities.any { it.isRoughWall }
+
+    val isSmoothWall: Boolean
+        get() = isWall && !isRoughWall
+
+    val isSmoothFloor: Boolean
+        get() = !isWall && !isRoughFloor
 
     fun addEntity(entity: GameEntity<EntityType>): Boolean {
         return currentEntities.add(entity)

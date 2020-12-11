@@ -1,23 +1,45 @@
 package com.liquidforte.roguelike.extensions
 
+import com.liquidforte.roguelike.entities.attributes.EntityActions
 import com.liquidforte.roguelike.entities.attributes.EntityPosition
 import com.liquidforte.roguelike.entities.attributes.EntityTile
 import com.liquidforte.roguelike.entities.attributes.Vision
 import com.liquidforte.roguelike.entities.attributes.flags.BlockOccupier
+import com.liquidforte.roguelike.entities.attributes.flags.RoughWall
 import com.liquidforte.roguelike.entities.attributes.flags.VisionBlocker
-import com.liquidforte.roguelike.entities.attributes.types.Player
+import com.liquidforte.roguelike.entities.attributes.types.*
+import com.liquidforte.roguelike.entities.facets.Openable
+import com.liquidforte.roguelike.game.GameContext
+import kotlinx.coroutines.runBlocking
 import org.hexworks.amethyst.api.Attribute
 import org.hexworks.cobalt.datatypes.Maybe
 import org.hexworks.zircon.api.data.Position3D
 import org.hexworks.zircon.api.data.Tile
 import kotlin.reflect.KClass
-
+import org.hexworks.amethyst.api.Consumed
+import org.hexworks.amethyst.api.Pass
+import org.hexworks.amethyst.api.Response
 
 val AnyGameEntity.occupiesBlock: Boolean
     get() = findAttribute(BlockOccupier::class).isPresent
 
 val AnyGameEntity.tile: Maybe<Tile>
     get() = this.findAttribute(EntityTile::class).map { it.tile }
+
+val AnyGameEntity.isWall: Boolean
+    get() = this.let { it.type is Wall }
+
+val AnyGameEntity.isRoughWall: Boolean
+    get() = this.let { it.isWall && it.findAttribute(RoughWall::class).isPresent }
+
+val AnyGameEntity.isDoor: Boolean
+    get() = this.let { it.type is Door }
+
+val GameEntity<Door>.isOpen: Boolean
+    get() = this.findFacet(Openable::class).isEmpty()
+
+val GameEntity<Door>.isClosed: Boolean
+    get() = this.findFacet(Openable::class).isPresent
 
 fun AnyGameEntity.isVisible(position: Position3D): Boolean {
     return if (vision.isEmpty() || position.isUnknown) {
@@ -49,4 +71,19 @@ var AnyGameEntity.position
 
 fun <T : Attribute> AnyGameEntity.tryToFindAttribute(klass: KClass<T>): T = findAttribute(klass).orElseThrow {
     NoSuchElementException("Entity '$this' has no property with type '${klass.simpleName}'.")
+}
+
+fun AnyGameEntity.tryActionsOn(context: GameContext, target: AnyGameEntity): Response {
+    var result: Response = Pass
+    findAttribute(EntityActions::class).map { actions ->
+        runBlocking {
+            actions.createActionsFor(context, this@tryActionsOn, target).forEach { action ->
+                if (target.executeCommand(action) is Consumed) {
+                    result = Consumed
+                    return@forEach
+                }
+            }
+        }
+    }
+    return result
 }

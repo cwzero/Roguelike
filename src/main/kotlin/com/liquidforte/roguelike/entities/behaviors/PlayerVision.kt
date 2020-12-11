@@ -1,5 +1,6 @@
 package com.liquidforte.roguelike.entities.behaviors
 
+import com.liquidforte.roguelike.blocks.GameBlocks
 import com.liquidforte.roguelike.extensions.isVisible
 import com.liquidforte.roguelike.extensions.position
 import com.liquidforte.roguelike.game.GameContext
@@ -15,7 +16,7 @@ object PlayerVision : BaseBehavior<GameContext>() {
         val (world, player, _, _) = context
 
         previous.filter { !player.isVisible(it) }.forEach { pos ->
-            world.fetchBlockAt(pos).map { it.render = false }
+            //world.fetchBlockAt(pos).map { it.render = false }
         }
 
         previous = mutableSetOf()

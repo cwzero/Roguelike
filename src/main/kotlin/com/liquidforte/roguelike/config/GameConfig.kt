@@ -10,7 +10,7 @@ object GameConfig {
     val TILESET = CP437TilesetResources.rexPaint16x16()
     val THEME = ColorThemes.afterglow()
 
-    const val TITLE = "Liquid Forte Roguelike"
+    const val TITLE = "Eric's Roguelike"
     const val WINDOW_WIDTH = 110
     const val WINDOW_HEIGHT = 60
 
@@ -25,7 +25,7 @@ object GameConfig {
 
     const val DUNGEON_LEVELS = 3
 
-    val WORLD_SIZE = Size3D.create(WINDOW_WIDTH * 2, WINDOW_HEIGHT * 2, DUNGEON_LEVELS)
+    val WORLD_SIZE = Size3D.create(100, 100, DUNGEON_LEVELS)
     val VISIBLE_SIZE = Size3D.create(PLAY_AREA_WIDTH, PLAY_AREA_HEIGHT, 1)
 
     fun buildAppConfig() = AppConfig.newBuilder()
