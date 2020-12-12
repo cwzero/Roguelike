@@ -120,7 +120,7 @@ class RoomConnector(private val root: BinaryRoom, private val level: Level) {
     private fun connectInitial() {
         while (connectedDoors.isEmpty()) {
             val door = doors.shuffled().first()
-            val path = AStarForDoors(root, level, door, doors.filter { it != door && it !in root[door] }, true)
+            val path = AStarForDoors(level, door, doors.filter { it != door && it !in root[door] }, true)
             if (path.isValid) {
                 connect(path)
             }
@@ -134,7 +134,7 @@ class RoomConnector(private val root: BinaryRoom, private val level: Level) {
             val door = remainingDoors.shuffled().first()
             val room = root[door]
 
-            val path = AStarForDoors(root, level, door, doors.filter { it != door && it !in root[door] }, true)
+            val path = AStarForDoors(level, door, doors.filter { it != door && it !in root[door] }, true)
             if (path.isValid) {
                 connect(path)
             } else {
@@ -149,7 +149,7 @@ class RoomConnector(private val root: BinaryRoom, private val level: Level) {
     private fun connectFailed() {
         while (failedDoors.isNotEmpty()) {
             val door = failedDoors.shuffled().first()
-            val path = AStarForDoors(root, level, door, connectedDoors.filter { it != door && it !in root[door] }, true)
+            val path = AStarForDoors(level, door, connectedDoors.filter { it != door && it !in root[door] }, true)
             if (path.isValid) {
                 connect(path)
                 failedDoors.remove(door)
@@ -168,7 +168,6 @@ class RoomConnector(private val root: BinaryRoom, private val level: Level) {
         }.distinct()
         val door = potentialDoors.shuffled().first()
         val aStar = AStarForDoors(
-            root,
             level,
             door,
             connectedDoors.filter { it != door && it !in root[door] },
@@ -260,8 +259,8 @@ class RoomConnector(private val root: BinaryRoom, private val level: Level) {
 
             level[centerPoint] = GameBlocks.roughFloor()
 
-            val lPath = AStarForDoors(root, level, lcp, listOf(lPoint), true).path
-            val rPath = AStarForDoors(root, level, rcp, listOf(rPoint), true).path
+            val lPath = AStarForDoors(level, lcp, listOf(lPoint), true).path
+            val rPath = AStarForDoors(level, rcp, listOf(rPoint), true).path
 
             lPath.forEach {
                 level[it] = GameBlocks.roughFloor()

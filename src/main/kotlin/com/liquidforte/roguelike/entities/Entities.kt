@@ -25,11 +25,11 @@ object Entities {
             EntityPosition(),
             EntityTile(GameTiles.PLAYER),
             Inventory(),
-            //Vision(9),
+            Vision(9),
             BlockOccupier,
             EntityActions(Open::class)
         )
-        behaviors(InputReceiver, /*PlayerVision*/)
+        behaviors(InputReceiver, PlayerVision)
         facets(Movable, CameraMover, StairAscender, StairDescender)
     }
 

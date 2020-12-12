@@ -13,10 +13,13 @@ import org.hexworks.cobalt.datatypes.Maybe
 import org.hexworks.zircon.api.builder.game.GameAreaBuilder
 import org.hexworks.zircon.api.data.*
 import org.hexworks.zircon.api.game.GameArea
+import org.hexworks.zircon.api.game.ProjectionMode
+import org.hexworks.zircon.api.game.base.BaseGameArea
 import org.hexworks.zircon.api.screen.Screen
 import org.hexworks.zircon.api.shape.EllipseFactory
 import org.hexworks.zircon.api.shape.LineFactory
 import org.hexworks.zircon.api.uievent.UIEvent
+import org.hexworks.zircon.internal.game.ProjectionStrategy
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -25,10 +28,7 @@ class World(
     startingBlocks: Map<Position3D, GameBlock>,
     visibleSize: Size3D,
     actualSize: Size3D
-) : GameArea<Tile, GameBlock> by GameAreaBuilder.newBuilder<Tile, GameBlock>()
-    .withVisibleSize(visibleSize)
-    .withActualSize(actualSize)
-    .build() {
+) : BaseGameArea<Tile, GameBlock>(visibleSize, actualSize) {
     private val engine: Engine<GameContext> = Engines.newEngine()
 
     init {
@@ -200,6 +200,7 @@ class World(
 
         engine.removeEntity(from)
         addEntity(to, from.position)
+
         from.position = Position3D.unknown()
     }
 

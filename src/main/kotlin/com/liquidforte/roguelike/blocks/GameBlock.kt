@@ -1,9 +1,11 @@
 package com.liquidforte.roguelike.blocks
 
 import com.liquidforte.roguelike.config.GameTiles
+import com.liquidforte.roguelike.entities.attributes.EntityTile
 import com.liquidforte.roguelike.entities.attributes.types.ClosedDoor
 import com.liquidforte.roguelike.entities.attributes.types.HiddenDoor
 import com.liquidforte.roguelike.entities.attributes.types.OpenDoor
+import com.liquidforte.roguelike.entities.attributes.types.StairsUp
 import com.liquidforte.roguelike.extensions.*
 import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.persistentHashMapOf
@@ -14,57 +16,63 @@ import org.hexworks.zircon.api.data.CharacterTile
 import org.hexworks.zircon.api.data.Tile
 import org.hexworks.zircon.api.data.base.BaseBlock
 
-class GameBlock(private val currentEntities: MutableList<AnyGameEntity> = mutableListOf(), private val defaultTile: CharacterTile = GameTiles.FLOOR)
-    : BaseBlock<Tile>(emptyTile = GameTiles.UNREVEALED, tiles = persistentHashMapOf()) {override var tiles: PersistentMap<BlockTileType, Tile>
-    get() = if (render) {
-        mutableMapOf<BlockTileType, Tile>().run {
-            if (isOccupied && occupier.tile.isPresent) {
-                occupier.tile.map {
+class GameBlock(
+    private val currentEntities: MutableList<AnyGameEntity> = mutableListOf(),
+    private val defaultTile: CharacterTile = GameTiles.FLOOR
+) : BaseBlock<Tile>(emptyTile = defaultTile, tiles = persistentHashMapOf()) {
+    override var tiles: PersistentMap<BlockTileType, Tile>
+        get() = mutableMapOf<BlockTileType, Tile>().apply {
+            if (render) {
+                occupier?.tile?.map {
                     memory = it
                     put(BlockTileType.TOP, it)
                 }
-            }
 
-            if (currentEntities.isNotEmpty()) {
-                currentEntities.map { it.tile }.firstOrNull()?.map {
+                currentEntities.firstOrNull()?.tile?.map {
                     memory = it
                     put(BlockTileType.CONTENT, it)
                 }
-            }
 
-            if (memory == GameTiles.UNREVEALED || memory == GameTiles.PLAYER) {
-                memory = GameTiles.EMPTY
+                if (memory == GameTiles.UNREVEALED || memory == GameTiles.PLAYER) {
+                    memory = defaultTile
+                }
+            } else {
+                put(BlockTileType.CONTENT, memory)
             }
 
             put(BlockTileType.BOTTOM, defaultTile)
 
-            this.toPersistentHashMap()
-        }
-    } else {
-        persistentHashMapOf(BlockTileType.TOP to memory, BlockTileType.BOTTOM to defaultTile)
-    }
-    set(_) = Unit
+            BlockTileType.values().forEach {
+                if (it !in this) {
+                    put(it, Tile.empty())
+                }
+            }
+        }.toPersistentHashMap()
+        set(_) = Unit
 
-    var render: Boolean = true
+    var render: Boolean = false
 
     private var memory: Tile = GameTiles.UNREVEALED
 
     var dirty: Boolean = false
 
+    val isStairsUp: Boolean
+        get() = currentEntities.any { it.type == StairsUp }
+
     val isEmptyFloor: Boolean
         get() = currentEntities.isEmpty()
 
-    val occupier: GameEntity<EntityType>
-        get() = currentEntities.first { it.occupiesBlock }
+    val occupier: GameEntity<EntityType>?
+        get() = currentEntities.firstOrNull { it.occupiesBlock }
 
     val isOccupied: Boolean
-        get() = currentEntities.any { it.occupiesBlock }
+        get() = currentEntities.isNotEmpty() && currentEntities.any { it.occupiesBlock }
 
     val entities: Iterable<GameEntity<EntityType>>
         get() = currentEntities.toList()
 
     val door: AnyGameEntity?
-        get() = currentEntities.first { it.isDoor }
+        get() = currentEntities.firstOrNull { it.isDoor }
 
     val isDoor: Boolean
         get() = currentEntities.any { it.isDoor }

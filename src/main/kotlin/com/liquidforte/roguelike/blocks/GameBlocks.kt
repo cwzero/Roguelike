@@ -14,11 +14,11 @@ object GameBlocks {
     fun smoothWall(tile: CharacterTile) = wall(tile, false)
 
     private fun wall(tile: CharacterTile, rough: Boolean) =
-        GameBlock(defaultTile = tile).apply { addEntity(Entities.newWall(tile, rough)) }
+        GameBlock().apply { addEntity(Entities.newWall(tile, rough)) }
 
-    fun stairsDown() = GameBlock().apply { addEntity(Entities.newStairsDown()) }
+    fun stairsDown() = GameBlock(defaultTile = GameTiles.STAIRS_DOWN).apply { addEntity(Entities.newStairsDown()) }
 
-    fun stairsUp() = GameBlock().apply { addEntity(Entities.newStairsUp()) }
+    fun stairsUp() = GameBlock(defaultTile = GameTiles.STAIRS_UP).apply { addEntity(Entities.newStairsUp()) }
 
-    fun door() = GameBlock().apply { addEntity(Entities.newClosedDoor()) }
+    fun door() = GameBlock(defaultTile = GameTiles.OPEN_DOOR).apply { addEntity(Entities.newClosedDoor()) }
 }

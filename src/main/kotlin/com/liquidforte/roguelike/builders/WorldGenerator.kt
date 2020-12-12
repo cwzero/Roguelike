@@ -14,6 +14,7 @@ abstract class WorldGenerator(private val worldSize: Size3D = GameConfig.WORLD_S
     protected val height = worldSize.yLength - 1
     protected val depth = worldSize.zLength - 1
     protected var levels: MutableMap<Int, Level> = mutableMapOf()
+
     protected val blocks: ImmutableMap<Position3D, GameBlock>
         get() {
             val temp: MutableMap<Position3D, GameBlock> = mutableMapOf()

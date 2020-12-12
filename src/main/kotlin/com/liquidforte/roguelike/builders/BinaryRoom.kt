@@ -16,6 +16,23 @@ class BinaryRoom(left: Int, right: Int, top: Int, bottom: Int) : Room(left, righ
     var leftRoom: BinaryRoom? = null
     var rightRoom: BinaryRoom? = null
 
+    fun countSplit(): Int {
+        if (split) {
+            return 1 + leftRoom!!.countSplit() + rightRoom!!.countSplit()
+        } else {
+            return 0
+        }
+    }
+
+    fun countNodes(): Int {
+        var result = 1
+        if (split) {
+            result += leftRoom!!.countNodes()
+            result += rightRoom!!.countNodes()
+        }
+        return result
+    }
+
     override val isConnected: Boolean
         get() {
             if (isLeaf) {
@@ -36,8 +53,8 @@ class BinaryRoom(left: Int, right: Int, top: Int, bottom: Int) : Room(left, righ
         if (split) {
             leftRoom!!.traverseUp(fn)
             rightRoom!!.traverseUp(fn)
+            fn(this)
         }
-        this.fn()
     }
 
     fun traverse(fn: BinaryRoom.() -> Unit) {
@@ -148,8 +165,8 @@ class BinaryRoom(left: Int, right: Int, top: Int, bottom: Int) : Room(left, righ
     }
 
     private fun createSubroom(): Room {
-        val roomWidth = Random.nextInt(5, 10)
-        val roomHeight = Random.nextInt(5, 10)
+        val roomWidth = Random.nextInt(width / 2, width - 2)
+        val roomHeight = Random.nextInt(height / 2, height - 2)
 
         val roomX = left + Random.nextInt(1, width - roomWidth - 1)
         val roomY = top + Random.nextInt(1, height - roomHeight - 1)
@@ -264,9 +281,9 @@ class BinaryRoom(left: Int, right: Int, top: Int, bottom: Int) : Room(left, righ
     }
 
     companion object {
-        const val minWidth = 12
-        const val maxWidth = 24
-        const val minHeight = 12
-        const val maxHeight = 24
+        const val minWidth = 8
+        const val maxWidth = 20
+        const val minHeight = 8
+        const val maxHeight = 20
     }
 }

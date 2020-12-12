@@ -22,7 +22,7 @@ object Movable : BaseFacet<GameContext>() {
             var result: Response = Pass
             world.fetchBlockAt(position).map { block ->
                 if (block.isOccupied) {
-                    result = source.tryActionsOn(context, block.occupier)
+                    result = source.tryActionsOn(context, block.occupier!!)
                 } else {
                     if (world.moveEntity(source, position)) {
                         result = if (source.isPlayer) {

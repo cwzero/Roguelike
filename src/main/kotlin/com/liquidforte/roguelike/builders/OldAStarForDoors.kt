@@ -6,17 +6,7 @@ import com.liquidforte.roguelike.extensions.neighbors
 import com.liquidforte.roguelike.extensions.orthogonalNeighbors
 import org.hexworks.zircon.api.data.Position
 
-data class Cell(
-    var parent: Position? = null,
-    var f: Double = Double.MAX_VALUE,
-    var g: Double = Double.MAX_VALUE,
-    var h: Double = Double.MAX_VALUE
-)
-
-data class SimpleCell(val pos: Position, var f: Double)
-
 class AStarForDoors(
-    private val root: BinaryRoom,
     private val level: Level,
     private val origin: Position,
     private val destinations: Iterable<Position>,
@@ -24,11 +14,20 @@ class AStarForDoors(
     private val canMove: (Position) -> Boolean = canMoveFunction(level, digging)
 ) {
     var destination: Position? = null
+    var errorDest: Position? = null
     val cells: MutableMap<Position, Cell> = mutableMapOf()
     var run = false
 
     val isValid: Boolean by lazy {
         run().destination != null
+    }
+
+    val errorPath: List<Position> by lazy {
+        run()
+        if (!isValid) {
+            tracePath(errorDest!!)
+        } else
+            listOf()
     }
 
     val path: List<Position> by lazy {
@@ -49,31 +48,11 @@ class AStarForDoors(
         }
     }
 
-    val rooms: Int by lazy {
-        run()
-        if (destination == null) {
-            -1
-        } else {
-            val path = path
-            val rooms = mutableListOf<Room>()
-
-            path.forEach {
-                val room = root[it]
-
-                if (room !is BinaryRoom && room !in rooms) {
-                    rooms.add(room)
-                }
-            }
-
-            rooms.size
-        }
-    }
-
     private fun canDig(pos: Position): Boolean =
         digging && level[pos].isRoughWall
 
     private fun shouldDig(from: Position, pos: Position): Boolean {
-        if (canDig(pos)) {
+        /*if (canDig(pos)) {
             // Does it get us closer to destination?
             val newAStar = AStarForDoors(
                 root,
@@ -82,24 +61,8 @@ class AStarForDoors(
                 destinations,
                 false
             )
-
-            if (newAStar.isValid) {
-                // Does it make a loop?
-                val loopAStar = AStarForDoors(
-                    root,
-                    level,
-                    pos,
-                    listOf(from),
-                    false
-                )
-
-                if (!loopAStar.isValid) {
-                    return true
-                } else {
-                    return loopAStar.rooms > 1
-                }
-            }
-        }
+            return newAStar.isValid
+        }*/
         return false
     }
 
@@ -139,14 +102,16 @@ class AStarForDoors(
         var pos = destination
         var current = cells[pos]!!
 
-        result.add(pos)
-
-        do {
-            pos = current.parent!!
-            current = cells[pos]!!
-
+        if (current != null && current.parent != null) {
             result.add(pos)
-        } while (current.parent != pos)
+
+            do {
+                pos = current.parent!!
+                current = cells[pos]!!
+
+                result.add(pos)
+            } while (current.parent != pos)
+        }
 
         return result.reversed()
     }
@@ -179,6 +144,7 @@ class AStarForDoors(
 
                 val cell = Cell(q.pos, 0.0, 0.0, 0.0)
                 neighbors.forEach { successor ->
+                    errorDest = successor
                     if (isDestination(successor) || shouldDig(q.pos, successor)) {
                         cells[successor] = cell
                         destination = successor
