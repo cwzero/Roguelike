@@ -2,7 +2,7 @@
 
 Roguelike game
 
-This is a simple roguelike.  If you'd like to try it out, download and extract the zip file from 'releases' or from this: https://github.com/cwzero/Roguelike/releases/tag/fp_0
+This is a simple roguelike.  If you'd like to try it out, download and extract the zip file from 'releases' or from this: https://github.com/cwzero/Roguelike/releases/tag/fp_1
 
 Requires java 8+ to be installed (might need a higher version, I haven't tested it on anything other than adoptopenjdk-hotspot-14)
 
