@@ -22,8 +22,9 @@ class GameBuilder(val worldSize: Size3D = WORLD_SIZE) {
 
     fun buildGame(): Game {
         val player = addPlayer()
-        addFungi()
+        //addFungi()
         addBats()
+        addZircons()
 
         prepareWorld(player)
 

@@ -27,6 +27,9 @@ val AnyGameEntity.occupiesBlock: Boolean
 val AnyGameEntity.tile: Maybe<Tile>
     get() = this.findAttribute(EntityTile::class).map { it.tile }
 
+val AnyGameEntity.fungusSpread: Maybe<FungusSpread>
+    get() = this.findAttribute(FungusSpread::class)
+
 val GameEntity<Item>.iconTile: GraphicalTile
     get() = findAttribute(ItemIcon::class).get().iconTile
 
@@ -73,8 +76,12 @@ var AnyGameEntity.position
         }
     }
 
-fun <T : Attribute> AnyGameEntity.tryToFindAttribute(klass: KClass<T>): T = findAttribute(klass).orElseThrow {
-    NoSuchElementException("Entity '$this' has no property with type '${klass.simpleName}'.")
+fun <T : Attribute> AnyGameEntity.tryToFindAttribute(klass: KClass<T>): T {
+    val attr = findAttribute(klass)
+    if (klass == FungusSpread::class) {
+        println("!")
+    }
+    return attr.orElseThrow {  NoSuchElementException("Entity '$this' has no property with type '${klass.simpleName}'.") }
 }
 
 fun AnyGameEntity.tryActionsOn(context: GameContext, target: AnyGameEntity): Response {

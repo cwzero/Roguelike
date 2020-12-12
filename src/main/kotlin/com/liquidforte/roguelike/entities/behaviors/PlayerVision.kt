@@ -1,6 +1,5 @@
 package com.liquidforte.roguelike.entities.behaviors
 
-import com.liquidforte.roguelike.blocks.GameBlocks
 import com.liquidforte.roguelike.extensions.isVisible
 import com.liquidforte.roguelike.extensions.position
 import com.liquidforte.roguelike.game.GameContext

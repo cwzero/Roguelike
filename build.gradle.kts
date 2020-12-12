@@ -16,8 +16,8 @@ repositories {
 dependencies {
     implementation(group = "org.hexworks.amethyst", name = "amethyst.core-jvm", version = "2020.0.1-PREVIEW")
     implementation(group = "org.hexworks.cobalt", name = "cobalt.core-jvm", version = "2020.0.19-PREVIEW")
-    implementation(group = "org.hexworks.zircon", name = "zircon.core-jvm", version = "2020.1.9-PREVIEW")
-    implementation(group = "org.hexworks.zircon", name = "zircon.jvm.swing", version = "2020.1.9-PREVIEW")
+    implementation(group = "org.hexworks.zircon", name = "zircon.core-jvm", version = "2020.1.6-HOTFIX")
+    implementation(group = "org.hexworks.zircon", name = "zircon.jvm.swing", version = "2020.1.6-HOTFIX")
 
     implementation(group = "com.github.kittinunf.result", name = "result", version = "3.1.0")
     implementation(group = "com.github.kittinunf.result", name = "result-coroutines", version = "3.1.0")
@@ -41,7 +41,7 @@ tasks.test {
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {
-        jvmTarget = "14"
+        jvmTarget = "1.8"
         //freeCompilerArgs = freeCompilerArgs + "-Xallow-result-return-type"
     }
 }
