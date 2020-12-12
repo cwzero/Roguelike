@@ -193,6 +193,16 @@ class World(
             true
         })
 
+    fun removeEntity(entity: AnyGameEntity) {
+        fetchBlockAt(entity.position).map {
+            it.removeEntity(entity)
+        }
+
+        engine.removeEntity(entity)
+
+        entity.position = Position3D.unknown()
+    }
+
     fun transformEntity(from: AnyGameEntity, to: AnyGameEntity) {
         fetchBlockAt(from.position).map {
             it.removeEntity(from)

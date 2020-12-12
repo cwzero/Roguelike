@@ -28,6 +28,11 @@ object GameConfig {
     val WORLD_SIZE = Size3D.create(100, 100, DUNGEON_LEVELS)
     val VISIBLE_SIZE = Size3D.create(PLAY_AREA_WIDTH, PLAY_AREA_HEIGHT, 1)
 
+    const val FUNGI_PER_LEVEL = 15
+    const val MAXIMUM_FUNGUS_SPREAD = 20
+    const val BATS_PER_LEVEL = 10
+    const val ZIRCONS_PER_LEVEL = 20
+
     fun buildAppConfig() = AppConfig.newBuilder()
             .withDefaultTileset(TILESET)
             .withSize(Size.create(WINDOW_WIDTH, WINDOW_HEIGHT))

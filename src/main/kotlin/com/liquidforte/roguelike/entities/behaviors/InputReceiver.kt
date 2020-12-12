@@ -4,6 +4,7 @@ import com.liquidforte.roguelike.entities.commands.MoveDown
 import com.liquidforte.roguelike.entities.commands.MoveTo
 import com.liquidforte.roguelike.entities.commands.MoveUp
 import com.liquidforte.roguelike.entities.attributes.types.Player
+import com.liquidforte.roguelike.entities.commands.PickItemUp
 import com.liquidforte.roguelike.extensions.GameEntity
 import com.liquidforte.roguelike.extensions.position
 import com.liquidforte.roguelike.game.GameContext
@@ -25,9 +26,14 @@ object InputReceiver : BaseBehavior<GameContext>() {
                 KeyCode.KEY_D -> player.moveTo(currentPos.withRelativeX(1), context)
                 KeyCode.KEY_R -> player.moveUp(context)
                 KeyCode.KEY_F -> player.moveDown(context)
+                KeyCode.KEY_P -> player.pickItemUp(currentPos, context)
             }
         }
         return true
+    }
+
+    private suspend fun GameEntity<Player>.pickItemUp(position: Position3D, context: GameContext) {     // 2
+        executeCommand(PickItemUp(context, this, position))
     }
 
     private suspend fun GameEntity<Player>.moveTo(position: Position3D, context: GameContext) {

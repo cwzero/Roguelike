@@ -5,8 +5,18 @@ import org.hexworks.amethyst.api.entity.EntityType
 
 interface Door : EntityType
 
+object Zircon : BaseEntityType(
+        name = "Zircon",
+        description = "A small piece of Zircon. Its value is unfathomable."), Item
+
+object Bat : BaseEntityType(
+        name = "bat"), Combatant
+
+object Fungus : BaseEntityType(
+        name = "fungus"), Combatant
+
 object Player : BaseEntityType(
-        name = "Player"), ItemHolder
+        name = "Player"), ItemHolder, Combatant
 
 object Wall : BaseEntityType(
         name = "wall")

@@ -66,4 +66,22 @@ object GameTiles {
         .withForegroundColor(GameColors.DOOR_COLOR)
         .withBackgroundColor(GameColors.FLOOR_BACKGROUND)
         .buildCharacterTile()
+
+    val FUNGUS = Tile.newBuilder()
+        .withCharacter('f')
+        .withBackgroundColor(GameColors.FLOOR_BACKGROUND)
+        .withForegroundColor(GameColors.FUNGUS_COLOR)
+        .buildCharacterTile()
+
+    val BAT = Tile.newBuilder()
+        .withCharacter('b')
+        .withBackgroundColor(GameColors.FLOOR_BACKGROUND)
+        .withForegroundColor(GameColors.BAT_COLOR)
+        .buildCharacterTile()
+
+    val ZIRCON  = Tile.newBuilder()
+        .withCharacter(',')
+        .withBackgroundColor(GameColors.FLOOR_BACKGROUND)
+        .withForegroundColor(GameColors.ZIRCON_COLOR)
+        .buildCharacterTile()
 }

@@ -129,7 +129,7 @@ class RoomGenerator(worldSize: Size3D = GameConfig.WORLD_SIZE) : WorldGenerator(
             }
         }
 
-        println("Connected: ${connectedCooridors.size}, Unconnected: ${unconnectedCorridors(index).size}, Splits: ${root.countSplit()}")
+        println("Connected: ${connectedCooridors[index]!!.size}, Unconnected: ${unconnectedCorridors(index).size}, Splits: ${root.countSplit()}")
     }
 
     override fun generate(): WorldGenerator = apply {
